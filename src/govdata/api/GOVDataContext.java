@@ -1,0 +1,95 @@
+package govdata.api;
+
+public class GOVDataContext {
+	private String apiKey;
+	private String apiSecret;
+	private String apiHost;
+	private String apiURI;
+	private String apiLogin;
+	private String apiData;
+
+	
+	/**
+	 * @param apiKey
+	 * @param apiSecret
+	 * @param apiHost
+	 * @param apiURI
+	 * @param apiURL 
+	 */
+	public GOVDataContext(String apiKey, String apiSecret, String apiHost,
+			String apiURI, String apiLogin, String apiData) {
+		super();
+		this.apiKey = apiKey;
+		this.apiSecret = apiSecret;
+		this.apiHost = apiHost;
+		this.apiURI = apiURI;
+		this.apiLogin= apiLogin;
+		this.setApiData(apiData);
+	}
+	
+	/**
+	 * @return the apiKey
+	 */
+	public String getApiKey() {
+		return apiKey;
+	}
+	/**
+	 * @param apiKey the apiKey to set
+	 */
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+	/**
+	 * @return the apiSecret
+	 */
+	public String getApiSecret() {
+		return apiSecret;
+	}
+	/**
+	 * @param apiSecret the apiSecret to set
+	 */
+	public void setApiSecret(String apiSecret) {
+		this.apiSecret = apiSecret;
+	}
+	/**
+	 * @return the apiHost
+	 */
+	public String getApiHost() {
+		return apiHost;
+	}
+	/**
+	 * @param apiHost the apiHost to set
+	 */
+	public void setApiHost(String apiHost) {
+		this.apiHost = apiHost;
+	}
+	/**
+	 * @return the apiURI
+	 */
+	public String getApiURI() {
+		return apiURI;
+	}
+	/**
+	 * @param apiURI the apiURI to set
+	 */
+	public void setApiURI(String apiURI) {
+		this.apiURI = apiURI;
+	}
+
+	public String getApiLogin() {
+		return apiLogin;
+	}
+
+	public void setApiLogin(String apiLogin) {
+		this.apiLogin = apiLogin;
+	}
+
+
+	public String getApiData() {
+		return apiData;
+	}
+
+	public void setApiData(String apiData) {
+		this.apiData = apiData;
+	}
+}
