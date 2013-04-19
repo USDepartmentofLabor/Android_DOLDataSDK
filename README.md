@@ -1,6 +1,5 @@
 Android_DOLDataSDK
 ==================
 
-Android SDK to ease access to US federal government APIs.
+SDK to ease access to DOL's and other federal agencies' APIs. For a list of APIs that this SDK has been tested against, please see the wiki. For documentation, please see the readme. For sample code, please visit http://developer.dol.gov.
 
-February 15, 2013:  Added support for non-DOL APIs that don't use API keys (e.g. FCC).
