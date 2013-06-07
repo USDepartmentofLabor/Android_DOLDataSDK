@@ -6,33 +6,32 @@ package govdata.api;
 
 
 
-import gov.SDK.sample.R;
-
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URLEncoder;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import gov.SDK.sample.R;
 
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-
-import android.net.Uri;
+import java.io.*;
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.webkit.WebView;
-
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import  govdata.api.GOVExtendData;
+import java.lang.*;
 
 
 
@@ -41,11 +40,15 @@ public class GOVDataRequest {
 	// instance variables
 	private GOVDataRequestCallback callback;
 	private GOVDataContext context;
-	
-
+	private String data; 
+    private String query;
+    private String contentType;
 	/**
 	 * @return the context
 	 */
+   
+   
+   
 	public GOVDataContext getContext() {
 		return context;
 	}
@@ -89,33 +92,46 @@ public class GOVDataRequest {
 	 * 
 	 * @param method
 	 * @param arguments
+	 * @throws Exception 
+	 * @throws InvalidKeyException 
 	 */
-	public void callAPIMethod(String method, HashMap<String, String> arguments) {
+	@SuppressLint("DefaultLocale")
+	public void callAPIMethod(String method, HashMap<String, String> arguments) throws InvalidKeyException, Exception {
 
 		
 		 StringBuffer url = new StringBuffer(context.getApiHost()
                  + context.getApiURI() + "/" + method);
+		 StringBuffer query = new StringBuffer(); 
 		 
         StringBuffer queryString = new StringBuffer();
-		
-		if(context.getApiHost().equalsIgnoreCase("http://api.dol.gov/")) {
-
-    
-              Log.d("The DOL Validation is correct", context.getApiHost()
-	                  + context.getApiURI() + context.getApiSecret() + context.getApiKey());
-                                          
-           
-
+        StringBuffer queryData = new StringBuffer();
+        String login = "";
+        String longURL = "";
+ 
     // Enumerate the arguments and add them to the request
        if (arguments != null) {
                for (HashMap.Entry<String, String> entry : arguments.entrySet()) {
                       String key = entry.getKey();
                       String value = "";
+                     
                     try {
                             value = URLEncoder.encode(entry.getValue(), "UTF-8");
                     } catch (UnsupportedEncodingException e) {
                             e.printStackTrace();
                     }
+                    
+                    if(context.getApiHost().equalsIgnoreCase("http://go.usa.gov")) {
+                      String keyLong = entry.getKey();
+                      String valueLong = entry.getValue();
+                       login = key;
+                       longURL= valueLong;
+                     
+                    }
+                     
+                     if(queryData.length() == 0) {
+                        queryData.append("&");
+                        queryData.append(key + "=" + value);
+                     }
 
                     if (key.equals("top") || key.equals("skip")
                                     || key.equals("select") || key.equals("orderby")
@@ -130,7 +146,9 @@ public class GOVDataRequest {
                             // append the querystring key and value
                             queryString.append("$" + key + "=" + value);
                     }
-                    else
+                    
+                 else
+                    
                     {
                             if (queryString.length() == 0) {
                                     queryString.append("?");
@@ -138,6 +156,7 @@ public class GOVDataRequest {
                                     queryString.append("&");
                             }
                             queryString.append(key + "=" + value);
+                         
                     }
 
             }
@@ -147,52 +166,66 @@ public class GOVDataRequest {
     if (queryString.length() > 0) {
             url.append(queryString.toString());
     }
-  
-  
-    new RequestTask().execute(url.toString());
-    Log.d("Request Task is being called", url.toString());
-         
-}
-    else if((!context.getApiHost().isEmpty()) && (!context.getApiKey().isEmpty()) && (context.getApiLogin().isEmpty())) {
-    	 StringBuffer dataset =  new  StringBuffer(context.getApiHost()  + context.getApiKey() + context.getApiData());
-    	String data = dataset.toString();
-    	Log.d("The ApiKey and ApiHost validation", data);
-    	new RequestTaskApiHost().execute(data);
-                        
-                        
-                           
-           
-    } else if(!context.getApiHost().isEmpty() && (context.getApiKey().isEmpty()) && (context.getApiLogin().isEmpty())) {
-    	
-    	           if (context.getApiData().isEmpty()) {
-                        String dataset = context.getApiHost();
-                        Log.d("The ApiKey and ApiHost only validation", dataset);
-                        new RequestTaskApiHost().execute(dataset);
-    	           } else {
-    	        	   
-    	        	   StringBuffer dataset = new StringBuffer(context.getApiHost() + context.getApiData());
-    	        	   String data  = dataset.toString();
-                       Log.d("The ApiKey and ApiHost only validation", data);
-                       new RequestTaskApiHost().execute(data);
-    	           }
-                      
-                          
-             } else if(!context.getApiHost().isEmpty()   && (!context.getApiKey().isEmpty()) && (!context.getApiLogin().isEmpty())) {
-            	 // Call go.usa.gov
-            		 StringBuffer dataset =  new StringBuffer (context.getApiHost()
-                          + context.getApiLogin() + context.getApiKey() + context.getApiData());
-            		   String data = dataset.toString();
-            	    	Log.d("The ApiLogin validation", data);
-            	    	    new RequestTaskApiHost().execute(data);
-               
-            	 
-      }
-           
     
-                   
+	 if (queryString.length() > 0) {
+         query.append(queryData.toString());
+ }
+  
+    if(context.getApiHost().equalsIgnoreCase("http://api.dol.gov")) {
+    	 
+    	 new RequestTask().execute(url.toString());
+    	       
+    
+         
+}  else if(context.getApiHost().equalsIgnoreCase("http://go.usa.gov")) {
+	
+	 
+	  
+         data = context.getApiHost()  + context.getApiURI() + "/" + method + '?' + "login=" + login + "&apiKey=" + context.getApiKey() + "&longUrl=" + longURL;
+        
+         new RequestTask().execute(data.toString());
+                                                                   
+    } else if(context.getApiHost().equalsIgnoreCase("http://www.ncdc.noaa.gov")) {
+    	
+    	// NOAA National Climatic Data Center
+
+    	  data = context.getApiHost()  + context.getApiURI() + "/" + method + '?' + "token=" + context.getApiKey() + query.toString();
+    	 
+    	  new RequestTask().execute(data.toString());
+    
+    } else if (context.getApiHost().equalsIgnoreCase("http://api.eia.gov") || context.getApiHost().equalsIgnoreCase("http://developer.nrel.gov") || context.getApiHost().equalsIgnoreCase("http://api.stlouisfed.org") || context.getApiHost().equalsIgnoreCase("http://healthfinder.gov"))
+    		{
+	
+    
+    // Energy EIA API (beta)
+	//		# Energy NREL
+	//		# St. Louis Fed
+	//		# NIH Healthfinder
+    
+    	 data = context.getApiHost()  + context.getApiURI() + "/" + method + '?' + "api_key=" + context.getApiKey() + query.toString();
+    	
+    	 new RequestTask().execute(data.toString());
+    	 
+    }
+    
+    else if (context.getApiHost().equalsIgnoreCase("http://api.census.gov") || context.getApiHost().equalsIgnoreCase("http://pillbox.nlm.nih.gov")) {
+    	
+    	
+    //	# Census.gov
+	//	# NIH Pillbox
+    
+    data = context.getApiHost()  + context.getApiURI() + "/" + method + '?' + "key=" + context.getApiKey() + query.toString();
+    
+    new RequestTask().execute(data.toString());
+    }	else  {
+    	
+    	
+    	new RequestTask().execute(url.toString());
+            
+    }            
   }
           
-  
+ 
 
 
 
@@ -220,39 +253,49 @@ public class GOVDataRequest {
 	 *
 	 */
 	private class RequestTask extends AsyncTask<String, Void, RequestResults> {
-
-		
+		@SuppressLint("DefaultLocale")
 		@Override
 		protected RequestResults doInBackground(String... params) {
 			try {
-				//Httpclient
+				
+				
+				
 				HttpClient hclient = new DefaultHttpClient();
 				HttpGet request = new HttpGet(params[0]);
-
+				
 				// Authorization Header
 				String authHeader = "";
-
-				//Try to get an authorization header
-				try {
-					authHeader = GOVAPIUtils.getRequestHeader(params[0], context.getApiHost(), context.getApiKey().toLowerCase(), context.getApiSecret());
-				} catch (final Exception e) {
-					// Send error to callback
+				 if(context.getApiHost().equalsIgnoreCase("http://api.dol.gov")) {
+					 try {
+						    	
+							authHeader = GOVAPIUtils.getRequestHeader(params[0], context.getApiHost(), context.getApiKey().toLowerCase(), context.getApiSecret());
+							
+							
+					 } catch (final Exception e) {
+							// Send error to callback
+							
+							return new RequestResults(true, e.getLocalizedMessage());
+						}
+					 
+					 
+						//At this oint we have the hader text. Add it to the request
+						request.addHeader("Authorization", authHeader);
+						
+						//Specify desired format for the OData service
+						request.addHeader("Accept", "application/json");
+				 }
+	
+				HttpResponse response = hclient.execute(request);
+			
+				Log.d("HTTP response from excution code: ", response.toString() );	
+				//Request completed. Check status code
+				int statusCode = response.getStatusLine().getStatusCode();
 					
-					return new RequestResults(true, e.getLocalizedMessage());
-				}
+				 Header entity = response.getFirstHeader("Content-Type");
+				Log.d("what is the status code: ", entity.toString());
 				
-				//At this oint we have the hader text. Add it to the request
-				request.addHeader("Authorization", authHeader);
-				
-				//Specify desired format for the OData service
-				request.addHeader("Accept", "application/json");
-
-				//Execute request
-				HttpResponse response = hclient.execute(request);
-
-				//Request completed. Check status code
-				int statusCode = response.getStatusLine().getStatusCode();
-				
+				contentType = entity.toString();
+				Log.d("what is the contenttype: ", contentType);
 				//If 200, return results to callback
 				if (statusCode == HttpStatus.SC_OK) {
 					String str = EntityUtils.toString(response.getEntity());
@@ -297,105 +340,65 @@ public class GOVDataRequest {
 		@Override
 		protected void onPostExecute(RequestResults r) {
 			
-			if (r.isError) {
-				callbackWithError(r.result);
-			} else {
-				callbackWithResults(r.result);
-			}
-		}
-		
-	}
-	
-	
-	private class RequestTaskApiHost extends AsyncTask<String, Void, RequestResults> {
-
-		
-		@Override
-		protected RequestResults doInBackground(String... params) {
-			try {
-				//Httpclient
+			if(contentType.startsWith("text/")) {
 				
+				 callbackWithResultsRaw(r.result);
+			} else if(contentType.startsWith("application/json")) {
+				Log.d("PrePost Call: ", r.result);	
+			    callbackWithResultsJSON(r.result);
 				
-				HttpClient hclient = new DefaultHttpClient();
-				HttpGet request = new HttpGet(params[0]);
-				
-	
-				HttpResponse response = hclient.execute(request);
-
-				//Request completed. Check status code
-				int statusCode = response.getStatusLine().getStatusCode();
-				
-				//If 200, return results to callback
-				if (statusCode == HttpStatus.SC_OK) {
-					String str = EntityUtils.toString(response.getEntity());
-					return new RequestResults(false, str);
-
-				} else {
-					//HTTP status code is not 200; return error.
-					String errorMessage;
-
-					switch (statusCode) {
-					case 401:
-						errorMessage = "Unauthorized";
-						break;
-					case 400:
-						errorMessage = "Bad Request";
-						break;
-					case 404:
-						errorMessage = "Request not found";
-						break;
-					case 500:
-						errorMessage = "Server could not process request";
-						break;	
-					case 504:
-						errorMessage = "Request timed out";
-						break;
-					default:
-						errorMessage = "Error " + statusCode + " returned";
-						break;
-					}
-					return new RequestResults(true, errorMessage);
-				}
-			} catch (IOException e) {
-				return new RequestResults(true, e.getLocalizedMessage());
-			}
-		}
-	
-
-		/**\
-		 *  Called after AsyncTask has completed
-		 *  From here we must call the callback helpers
-		 */
-		@Override
-		protected void onPostExecute(RequestResults r) {
 			
-			if (r.isError) {
-				callbackWithError(r.result);
-			} else {
-				callbackAPiWithResults(r.result);
-			}
+			} else if (contentType.startsWith("application/xml")) {
+				Log.d("PrePost Call: ", r.result);
+				callbackWithResultsXML(r.result);
+			} else {				
+			
+								Log.d("PrePost Call: ", r.result);	
+							   callbackWithResultsRaw(r.result);	
+						
+				}
+						  
 		}
 		
-	}
+		
+	
 
 	/**
 	 * Callback method to return results to the caller
 	 * 
 	 * @param results
 	 */
-	private void callbackAPiWithResults(final String results) {
-		//Parse JSON
-		String objects =  results;
+	private void callbackWithResultsRaw(final String results) {
+		
 		// return results to the callback
-		callback.GOVDataResultsCallback(objects);
+		callback.GOVDataResultsCallback(results);
 	}
-
 	
-	private void callbackWithResults(final String results) {
+	
+	private void callbackWithResultsJSON(final String results) {
 		//Parse JSON
 		List<Map<String, String>> objects = GOVAPIUtils.parseJSON(results);
 		// return results to the callback
-		callback.GOVDataResultsCallback(objects);
+		if ((objects != null) && !objects.isEmpty()) {
+		callback.GOVDOLDataResultsCallback(objects);
+		} else {
+			callbackWithResultsRaw(results);
+		}
+	}
+	
+	
+	
+	private void callbackWithResultsXML(final String results) {
+		//Parse JSON
+	
+		Map<String, String> objects = GOVAPIUtils.parseXML(results);
+		// return results to the callback
+		if ((objects != null) && !objects.isEmpty()) {
+			callback.GOVDataResultsCallback(objects);
+			} else {
+				callbackWithResultsRaw(results);
+			}
+		
 	}
 	/**
 	 * Callback method to return errors to the caller
@@ -407,5 +410,5 @@ public class GOVDataRequest {
 		callback.GOVDataErrorCallback(error);
 	}
 	
-	
+	}
 }

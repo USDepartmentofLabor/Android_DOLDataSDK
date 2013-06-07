@@ -19,10 +19,19 @@ import java.util.TimeZone;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import android.annotation.SuppressLint;
+
+import com.google.common.base.Strings;
 
 public class GOVAPIUtils {
 	
@@ -47,6 +56,7 @@ public class GOVAPIUtils {
 		return result;
 	}
 	
+	@SuppressLint("SimpleDateFormat")
 	private static String getAPITimestamp()
 	{
 		SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -245,6 +255,49 @@ public class GOVAPIUtils {
 		
 		return oObj;
 	}
+	
+	@SuppressWarnings("null")
+	public static Map<String, String> parseXML(String xmlString) {
+		Map<String, String> resultList = null;
+		try{
+		     DocumentBuilderFactory f =
+		     DocumentBuilderFactory.newInstance();
+		     DocumentBuilder b = f.newDocumentBuilder();
+		     Document doc = b.parse(xmlString);
+		     NodeList nodeList = doc.getChildNodes();
+		     
+		     for (int i = 0; i < nodeList.getLength(); i++) {
+		          Node textChild = nodeList.item(i);
+		          NodeList childNodes = textChild.getChildNodes();
+		          
+		     for (int j = 0; j < childNodes.getLength(); j++) {
+		          
+		    	      Node grantChild = childNodes.item(j);
+		              NodeList grantChildNodes = grantChild.getChildNodes();
+		              for (int k = 0; k < grantChildNodes.getLength(); k++) {
+		                  if(Strings.isNullOrEmpty(grantChildNodes.item(k).getTextContent() ) ) {
+		                      Map<String, String> map = new HashMap<String, String>();
+		                              map.put(grantChildNodes.item(k).getNodeName() , grantChildNodes.item(k).getTextContent());
+		                              ((ArrayList<Map<String,String>>) resultList).add(map);
+		                  }
+		              }
+		          }
+		      }
+		      
+		      
+	}
+	  catch (Exception e)
+		    {
+		      e.printStackTrace();
+		    }
+	
+		  
+		return resultList;
+	
+			
+		}
+		
+
 	
 	/** 
 		 * @deprecated Do not use this method! 

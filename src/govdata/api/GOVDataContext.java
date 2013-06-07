@@ -5,8 +5,6 @@ public class GOVDataContext {
 	private String apiSecret;
 	private String apiHost;
 	private String apiURI;
-	private String apiLogin;
-	private String apiData;
 
 	
 	/**
@@ -17,14 +15,13 @@ public class GOVDataContext {
 	 * @param apiURL 
 	 */
 	public GOVDataContext(String apiKey, String apiSecret, String apiHost,
-			String apiURI, String apiLogin, String apiData) {
+			String apiURI) {
 		super();
 		this.apiKey = apiKey;
 		this.apiSecret = apiSecret;
 		this.apiHost = apiHost;
 		this.apiURI = apiURI;
-		this.apiLogin= apiLogin;
-		this.setApiData(apiData);
+	
 	}
 	
 	/**
@@ -74,22 +71,5 @@ public class GOVDataContext {
 	 */
 	public void setApiURI(String apiURI) {
 		this.apiURI = apiURI;
-	}
-
-	public String getApiLogin() {
-		return apiLogin;
-	}
-
-	public void setApiLogin(String apiLogin) {
-		this.apiLogin = apiLogin;
-	}
-
-
-	public String getApiData() {
-		return apiData;
-	}
-
-	public void setApiData(String apiData) {
-		this.apiData = apiData;
 	}
 }
