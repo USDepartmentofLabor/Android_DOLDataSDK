@@ -1,0 +1,472 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML> 
+<HEAD> 
+<TITLE>U.S. Department of Labor -- The Department of Labor Developer Community</TITLE>
+<META NAME="keywords" CONTENT="Department of Labor, DOL, Secretary of Labor" />
+<!-- begin dol-styles.shtm -->
+<link rel="shortcut icon" href="http://www.dol.gov/favicon.ico" type="image/x-icon">
+<link rel="icon" href="http://www.dol.gov/favicon.ico" type="image/x-icon">
+<link href="http://www.dol.gov/dol.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="api.css" TYPE="text/css" />
+<link href="http://webapps.dol.gov/FSPublic/Content/W_Helpful.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+caption {text-align:left; font-size:80%}
+table{margin-left:12px;}
+
+
+-->
+</style>
+
+<!-- end dol-styles.shtm -->
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script type="text/javascript" src="prettify.js"></script>
+<script language="JavaScript" type="text/javascript">
+
+	jQuery(document).ready(function(){
+
+		// This line of code makes code pretty to look at and understand.
+		window.prettyPrint && prettyPrint()
+	
+	});
+	
+
+
+</script>
+<!--start include header-dest-redesign3.shtm -->
+<script src="http://webapps.dol.gov/FSPublic/Scripts/W_Helpful.js" type="text/javascript"></script>
+<script type="text/javascript">
+		$(document).ready(function() {
+			W_Helpful.init('#fbcontent');
+		});
+</script> 
+</HEAD> 
+<BODY> 
+<a href="https://github.com/USDepartmentofLabor/Android_DOLDataSDK"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+<div id="Main">
+	<!--Header Start -->
+    <a href="#pagecontent" class="skipster">Skip to page content</a>
+
+<div id="Header">
+    <div id="Banner">
+        <p class="banner"><a href="http://www.dol.gov">United States Department of Labor</a></p>
+    </div>
+		<div id="RightColumn"><table><tr><td valign="bottom">
+		
+			</td><td>
+            
+  
+ 
+ 
+ 
+            
+            
+          </td></tr>
+		  <tr><td colspan="2">
+			
+
+			</td></tr></table>
+		</div>
+	</div>
+    
+	<!--Header End -->
+
+	<!--Body Start -->
+	<div id="Body">
+		<div id="UtilityBar" class="tools">
+			<div class="utilitybarleft"><div id="agencyname">&nbsp;</div></div>
+
+			<!-- This is where the E-mail This page use to be -->
+			<div class="utilitybarright">
+				<div id="fbcontent" style="float:right"></div>			
+			</div>
+		</div>
+		<div class="crumb-links"><!-- begin crumb-nonav-auto.shtm -->
+<TABLE BORDER="0" CELLSPACING="0" CELLPADDING="0">
+  <TR>
+    <TD VALIGN="middle" ALIGN="LEFT" height="7" style="padding-left:2px"><span class="crumb-links">
+      <a href="http://www.dol.gov">DOL Home</a> &gt; <a href="http://www.dol.gov/open/">OPEN</a> &gt; <a href="http://developer.dol.gov">Developer Community</a> &gt; Android Federal Data SDK
+      </span> </td>
+
+  </tr>
+</table>
+<!-- end crumb-nonav-auto.shtm --></div>
+		<div id="content" >
+			<div id="pagecontent" style="width:768px;font-size:0;line-height:0;"></div>
+
+<!--end include header-dest-redesign3.shtm -->
+<!-- START CONTENT HERE  *************************************************** -->
+                <h1 class="title" id="page-title">Android Federal Data SDK</h1>
+
+<h2>Adding the SDK to Your Project</h2>
+<h3>Add SDK files to your project</h3>
+<p><a href="https://github.com/USDepartmentofLabor/Android_DOLDataSDK/archive/master.zip">Extract the zipped SDK folder</a> or grab the <a href="https://github.com/USDepartmentofLabor/Android_DOLDataSDK">Git repository</a>.</p>
+<p> Copy the contents of the SDK <strong>src</strong> folder to the <strong>src</strong> folder of your Android project.</p>
+<h2>Using the SDK</h2>
+<h3><a name="ref" id="ref"></a>Reference the DOL Data API in your source file</h3>
+<p>In the source files that will make Goverment Data requests add the  following imports:</p>
+<pre class="prettyprint" style="width:400px">import java.util.HashMap;
+import govdata.api.GOVDataContext;
+import govdata.api.GOVDataRequest;
+import govdata.api.GOVDataRequestCallback;</pre><p></p>
+<h3><a name="callback" id="callback"></a>Prepare your class for callbacks</h3>
+<p>The DOL Data SDK processes requests asynchronously to prevent locking up the UI while the data is requested and processed. To achieve  this the SDK makes use of callback methods. To successfully retrieve data it is  required to implement the two <strong>GOVDataRequestCallback</strong>  methods. The methods will be invoked when the  results have been processed or when an error occurs.</p>
+<p>1. Implement the <strong>GOVDataRequestCallback</strong>  interface in the class that will receive  and process the API responses</p>
+<p>Example:</p>
+<pre class="prettyprint" style="width:400px">public class DOLDataAPI extends ListActivity
+	implements GOVDataRequestCallback</pre><p>2. Add the interface methods to the class</p>
+<pre class="prettyprint">public void  GOVDataResultsCallback(List &gt; results) {
+//Todo: Add your code to process the results
+	Results are in a list of maps. Each map contains one record
+}
+
+//Government entity data set call.
+		@Override
+		public void GOVDataResultsCallback(String results) {
+	
+		    //Todo: Add your code to handle the error
+		      	
+		}
+
+public void GOVDataErrorCallback(String error) {
+	//Todo: Add your code to handle the error
+}
+
+</pre><p></p>
+<h3><a name="calls" id="calls"></a>Making API Calls</h3>
+<p><br /></p>
+<p>The <strong>GOVDataRequest</strong> class is used to make API calls. It requires a context object to be passed to  its constructor in order to get the API key and URL information needed for the  requests. The <strong>GOVDataContext</strong> is the  context class used to hold this information.</p>
+<p>You can pass arguments to the API call by adding them to a  HashMap as key/value pairs and passing it as the second parameter of the <strong>callAPIMethod</strong><br />
+	method. Valid arguments are defined later in this  document.</p>
+<p>In order to make requests:</p>
+<ol><li>Instantiate a <strong>GOVDataContext</strong> object</li>
+<li>Instantiate a <strong>GOVDataRequest</strong> object and pass the context and the callback object  (usually <em>this</em>) as parameters.</li>
+<li>Create a <strong>HashMap</strong> and store all the API arguments as key/value pairs.</li>
+<li>Call the <strong>callAPIMethod</strong> method,  passing the API name and the arguments (or null if there are no arguments)</li>
+</ol><p><u>Sample code to make requests for standard DOL API datasets:</u></p>
+<pre class="prettyprint">//Usually stored as instance variables
+ // API Key and URL constants
+    public final String API_HOST = "http://data.fcc.gov";
+    public final String API_KEY = "";
+    public final String SHARED_SECRET = "";
+    public final String API_URI = "/api/block";
+    public final String API_DATA = "/find";
+/////////////////////////////////////
+
+//Instantiate Government Data context object
+//This object stores the API information required to make requests
+ GOVDataContext context = new GOVDataContext(API_KEY, SHARED_SECRET, API_HOST, API_URI, API_DATA);
+
+//Instantiate new request object. Pass the callback object (this) and
+//context that contains all the API key info
+GOVDataRequest request = new GOVDataRequest(this, context);
+
+//API we want to fetch data from
+String method = "FORMS/Agencies";
+
+//Build Hashtable arguments
+HashMap args = new HashMap ();
+args.put("top", "2");
+args.put("filter", "AgencyId eq 'OSHA'");
+//Make API call
+request.callAPIMethod(method, args);</pre><p></p>
+<p><u>Sample code to make requests for  DOL Service Operation (e.g  Summer Jobs Plus) :</u></p>
+<pre class="prettyprint">
+//Usually stored as instance variables
+public final String API_KEY = "YOUR API KEY";
+public final String SHARED_SECRET = "YOUR SHARED SECRET";
+public final String API_HOST = "http://api.dol.gov/";
+public final String API_URI = "/V1";//API VERSION
+public final String API_DATA = "";
+/////////////////////////////////////
+
+//Instantiate GOV Data context object
+//This object stores the API information required to make requests
+ GOVDataContext context = new GOVDataContext(API_KEY, SHARED_SECRET, API_HOST, API_URI, API_DATA);
+
+//Instantiate new request object. Pass the callback object (this) and
+//context that contains all the API key info
+GOVDataRequest request = new GOVDataRequest(this, context);
+
+//API we want to fetch data from
+string methodname = "SummerJobs/getJobsListing";
+	
+// HashMap to store the arguments
+HashMap<string string=""> summerJobsArgs = new HashMap<string string="">(7);
+	 
+// API method to call
+// Populate the args into the HashMap
+HashMap summerJobsArgs = new HashMap ();
+	
+summerJobsArgs.put("format", "'json'");
+summerJobsArgs.put("query", "'Farm'");
+summerJobsArgs.put("region", "");
+summerJobsArgs.put("locality", "");
+summerJobsArgs.put("skipCount", "8");
+//Make API call
+request.callAPIMethod(methodname, summerJobsArgs);
+</string></string></pre><p></p>
+<p><u>Sample code to make requests for outside Government Entity:</u></p>
+<pre class="prettyprint">
+//Usually stored as instance variables
+public final String API_KEY = "YOUR API KEY";
+public final String SHARED_SECRET = "YOUR SHARED SECRET";
+public final String API_HOST = "http://api.sba.gov/loans_grants/federal.xml";
+public final String API_URI = "/V1";//API VERSION
+public final String API_DATA = "";
+/////////////////////////////////////
+
+//Instantiate GOV Data context object
+//This object stores the API information required to make requests
+ GOVDataContext context = new GOVDataContext(API_KEY, SHARED_SECRET, API_HOST, API_URI, API_DATA);
+
+//Instantiate new request object. Pass the callback object (this) and
+//context that contains all the API key info
+GOVDataRequest request = new GOVDataRequest(this, context);
+
+//API we want to fetch data from you can leave this information blank and it will return a raw data set call of xml or json.
+string methodname = "YourString/DataSet";
+	
+// HashMap to store the arguments
+HashMap<string string=""> yourDataArgs = new HashMap<string string="">(7);
+	 
+// API method to call
+// Populate the args into the HashMap
+HashMap yourDataArgs = new HashMap ();
+//Add your code to hasp map your data results.	
+
+//Make API call
+request.callAPIMethod(methodname, yourDataArgs);
+</string></string></pre><p></p>
+<p>The callAPIMethod triggers the SDK to process the request,  add authorization headers and callback with the results or with an error  message. Once the process has completed one of the two callback methods from  the GOVDataRequestCallback   interface will  be called. If successful, the <strong>GOVDataResultsCallback</strong> method will be called and the results parameter will contain the data you  requested.  The results parameter  contains a Vector of Hashtables. Each Hashtable is mapped to one record of the  dataset. If the request failed for any reason, the <strong>GOVLDataErrorCallback </strong>will be called and the error parameter will  contain a description of the error.</p>
+<p><u>Sample code to make requests for standard DOL API datasets:</u></p>
+<pre class="prettyprint">public void GOVDataResultsCallback(List &gt; results) {
+	//Todo: Add your code to process the results
+	Map record = results.get(0);
+	if(null != record.get("AgencyName") &amp;&amp; record.get("AgencyName")!= "")
+	{
+		String name = record.get("AgencyName");
+	}
+}</pre><p><u>Sample code to make requests for outside Government Entity API datasets This simply returns raw data. Please make the hashmap adjustment to format the data you are returning.:</u></p>
+<pre class="prettyprint">//Government entity data set call.
+		@Override
+		public void GOVDataResultsCallback(String results) {
+			List<string> dataresults = new ArrayList<string>();
+		    dataresults.add(results);
+			// Set list adapter. 
+	    	setListAdapter(new ArrayAdapter<string>(this,R.layout.list_item,dataresults));
+	    	// Enable text filtering
+	    	ListView lv = getListView();
+	    	lv.setTextFilterEnabled(true);
+		      
+		
+		}
+}</string></string></string></pre><pre class="prettyprint">
+public void GOVLDataErrorCallback(String error) {
+	//TODO:  Add your code here
+}</pre><p></p>
+<p><u>Sample code to make requests for DOL service operation:</u> The the<br /><b>GOVDataResultsCallback</b> method will provide access to the results in the form of<br />
+	List of Map objects.Developer has to clean the json response text to get the clean json object from service response. SomeTime search result may have special charcter which cause to thrown<br />
+	an error during JSON serialization.
+</p>
+<pre class="prettyprint">public void GOVDataResultsCallback(List &gt; results) {
+	
+	//Todo: Add your code to process the results
+	// Create List of strings to populate the listview items
+	
+	List<string> display = new ArrayList<string>();
+	
+	//Create  JSON Object and JSONArray to store the data from DOlservice operation.
+	JSONObject jsonObject = null;
+	JSONArray subArray =null;
+	
+	// Iterate thru List of results. Add each field to the display List		
+	for (Map<string string=""> m : results) {
+		try {
+			//Look for value of getJobsListing property.
+			if(null != m.get("getJobsListing"))
+				{
+					String jobs = m.get("getJobsListing");
+					//convert jString to the jObject
+					jobs = jobs.replaceAll("\\\\n", "");
+					jobs = jobs.replaceAll("\\\\\"", "\"");
+					jobs = jobs.replaceAll("\"\\{", "\\{");
+					jobs = jobs.replaceAll("\\}\"", "\\}");
+					// start extracting the content from jObject
+					jsonObject = new JSONObject(jobs);
+				
+					if(null!=jsonObject)
+					{
+						//Look for an array of "item".
+						subArray = jsonObject.getJSONArray("items");
+						if(null!= subArray)
+						{
+							//Lets loop through each jobs.
+							for(int i=0; i&lt;subArray.length(); i++)  
+							{  
+								//Get the job title. 
+								
+								display.add(
+										subArray.
+										getJSONObject(i).
+										getString("title"));
+							}  
+						}
+					}
+			}
+				
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}  
+	}
+} 
+</string></string></string></pre><p><u>Sample code to make requests for outside Government Entity API datasets This simply returns raw data. Please make the hashmap adjustment to format the data you are returning.:</u></p>
+<pre class="prettyprint">//Government entity data set call.
+		@Override
+		public void GOVDataResultsCallback(String results) {
+			List<string> dataresults = new ArrayList<string>();
+		    dataresults.add(results);
+			// Set list adapter. 
+	    	setListAdapter(new ArrayAdapter<string>(this,R.layout.list_item,dataresults));
+	    	// Enable text filtering
+	    	ListView lv = getListView();
+	    	lv.setTextFilterEnabled(true);
+		      
+		
+		}
+</string></string></string></pre><pre class="prettyprint">
+public void GOVLDataErrorCallback(String error) {
+	//TODO:  Add your code here
+}</pre><p></p>
+<h3>API Method Arguments</h3>
+<h3>Standard DOL API datasets</h3>
+<h4>top</h4>
+<p>The top argument is used to specify the number of records to be returned.</p>
+<p>Example:</p>
+<pre class="prettyprint">
+//Return top 2 records
+HashMap&lt; String, String &gt; args = new HashMap &lt; String, String &gt;();
+args.put("top", "2");</pre><h4>skip</h4>
+<p>The skip argument specifies that you want the service to skip a specified number of results. This argument in combination with top, serve as the basis to implement pagination.</p>
+<p>Example:</p>
+<pre class="prettyprint">
+//Return records 21-30
+HashMap&lt; String, String &gt; args = new HashMap&lt; String, String &gt;();
+args.put("top", "10");
+args.put("skip", "20");</pre><h4>select</h4>
+<p>The select argument allows you to specify the exact columns that you want the API to return. Separate them with commas if there is more than one.</p>
+<p>In order to save bandwidth, it is always a good idea to add a select clause to most requests and retrieve the columns needed for a specific function. Some datasets can contain dozens of columns and the performance of your app can be impacted if you always return all of the columns. This is even more important in mobile applications because of device memory limitations, possible slow network speeds, and data usage caps imposed by carriers.</p>
+<p>Example:</p>
+<pre class="prettyprint">
+//Select the AgencyId and AgencyFormNumber columns
+HashMap&lt; String, String &gt; args = new HashMap &lt; String, String &gt;();
+args.put("select", "AgencyId,AgencyFormNumber");</pre><h4>orderby</h4>
+<p>Use the orderby argument to sort the data by one or more columns. Separate them with commas if there is more than one.</p>
+<pre class="prettyprint">
+//Order by the AgencyFormNumber column
+HashMap&lt; String, String &gt; args = new HashMap &lt; String, String &gt;();
+args.put("orderby", "AgencyFormNumber");</pre><h4>filter</h4>
+<p>The filter argument is used to add filters to the API query. For example, you can filter results where a specific column is equal to a string provided.</p>
+<p>The API recognizes the following comparison keywords:</p>
+<ul><li><strong>eq</strong> – Equal to</li>
+<li><strong>ne</strong> – Not Equal to</li>
+<li><strong>gt</strong> – Greater than</li>
+<li><strong>lt</strong> – Less than</li>
+<li><strong>ge</strong> – Greater than or equal to</li>
+<li><strong>le</strong> – Less than or equal to</li>
+</ul><p>For string comparisons enclose any multiple word string in single quotes. For example: <strong>'Legal Identity Report'</strong></p>
+<p>More than one filter can be specified by joining them with the <strong>and</strong>/<strong>or</strong> keywords. Separate filters with parenthesis.</p>
+<p>For example: <strong>(AgencyId eq 'MSHA') and (Title eq 'Legal Identity Report') </strong>retrieves the records where the value in the AgencyId column is equal to 'MSHA' and the value for the Title column is equal to 'Legal Identity Report'.</p>
+<p>Example:</p>
+<pre class="prettyprint">
+//Filter columns
+HashMap &lt; String, String &gt; args = new HashMap&lt; String, String &gt;();
+args.put("filter", "(AgencyId eq  'MSHA') and (Title eq 'Legal Identity Report')");</pre><h4>DOL Service Operation for Summer Jobs Plus</h4>
+<p>To use the Service Operations API the Operation name and parameters need to be supplied using the data services format. Each String typed parameter must be surrounded in quotes in order to work correctly. These quotes are then Url encoded and passed to the Service Operation.</p>
+<h4>format</h4>
+<p>The format argument allows you to specify the format that the results string will be returned. If format argument is not passed with request then result will be returned in json format by default. Following are the supported format of results string.</p>
+<h5>Format Codes:</h5>
+<ul><li>json ( Default )</li>
+<li>xml</li>
+<li>atom</li>
+</ul><p>Example:</p>
+<pre class="prettyprint">
+// HashMap to store the arguments
+HashMap<string string=""> summerJobsArgs = new HashMap<string string="">(7);
+summerJobsArgs.put("format", "'json'");
+</string>,&gt;</string>,&gt;</pre><h4>query</h4>
+<p>The query argument will be used to find matching job listings. This is required if region or locality are not provided.</p>
+<p>Example:</p>
+<pre class="prettyprint">
+// HashMap to store the arguments
+HashMap<string string=""> summerJobsArgs = new HashMap<string string="">(7);
+summerJobsArgs.put("query", "'Farm'");
+</string>,&gt;</string>,&gt;</pre><h4>region</h4>
+<p>The region argument will be used to filter jobs listings by the state name or abbreviation. This is required if query or locality are not provided.</p>
+<p>Example:</p>
+<pre class="prettyprint">
+// HashMap to store the arguments
+HashMap<string string=""> summerJobsArgs = new HashMap<string string="">(7);
+summerJobsArgs.put("region", "");
+</string>,&gt;</string>,&gt;</pre><h4>locality</h4>
+<p>The region argument will be used to filter jobs listings by The city name. This is required if query or region are not provided.</p>
+<p>Example:</p>
+<pre class="prettyprint">
+// HashMap to store the arguments
+HashMap<string string=""> summerJobsArgs = new HashMap<string string="">(7);
+summerJobsArgs.put("locality", "");
+</string>,&gt;</string>,&gt;</pre><h4>skipCount</h4>
+<p>The skipCount argument will be used to specify the number of records to skip ahead from the first recor.Valid range of 1-99 and it required.</p>
+<p>Example:</p>
+<pre class="prettyprint">
+// HashMap to store the arguments
+HashMap<string string=""> summerJobsArgs = new HashMap<string string="">(7);
+summerJobsArgs.put("skipCount", "1");
+</string>,&gt;</string>,&gt;</pre><h2>Licenses</h2>
+<p>The DOLData classes (whose file names start with DOLData) are released to the Public Domain.</p>
+<p>This SDK makes use of other libraries that are licensed differently. Please read them carefully.</p>
+<p><strong>org.json.me, org.json.me.util</strong></p>
+<p>Copyright (c) 2002 JSON.org</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a cop of this software and associated documentation files (the "Software"), to dea in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p>The Software shall be used for Good, not Evil.</p>
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
+
+
+<!-- END CONTENT HERE  *************************************************** -->
+<!---original location of this file: "/includes/" -->
+
+</div><!--Body End -->
+
+ </div>
+
+	<!--Footer Start -->
+	<div id="Footer">
+		<div id="FooterMenu">
+			<div id="FooterMenuContainer">
+				<a href="http://www.dol.gov/dol/foia/main.htm">Freedom of Information Act</a>&nbsp;|&nbsp;
+
+				<a href="http://www.dol.gov/dol/privacynotice.htm">Privacy & Security Statement</a>&nbsp;|&nbsp;
+				<a href="http://www.dol.gov/dol/disclaim.htm">Disclaimers</a>&nbsp;|&nbsp;
+				<a href="http://webapps.dol.gov/feedback/FeedbackSurvey.aspx">Customer Survey</a>&nbsp;|&nbsp;
+				<a href="http://www.dol.gov/dol/aboutdol/website-policies.htm">Important Web Site Notices</a>&nbsp;|&nbsp;
+
+                <a href="http://www.dol.gov/dol/aboutdol/plug-ins.htm">Plug-ins Used by DOL</a>
+			</div>
+		</div>
+	
+		<div id="FooterContact">
+			<div id="FooterContactContainer">
+				U.S. Department of Labor&nbsp;|&nbsp;Frances Perkins Building, 200 Constitution Ave., NW, Washington, DC 20210<br>
+
+				<a href="http://www.dol.gov" style=" text-decoration: underline; ">www.dol.gov</a>&nbsp;|&nbsp;Telephone: 1-866-4-USA-DOL (1-866-487-2365)&nbsp;|&nbsp;TTY: 1-877-889-5627&nbsp;|&nbsp;<u><a href="http://www.dol.gov/dol/contact/index.htm">Contact Us</a></u>
+			</div>
+		</div>
+	</div>
+	<!--Footer End -->
+
+
+</div><!--Main End -->
+
+  </BODY>
+</HTML>
